@@ -1,13 +1,15 @@
-#include "headers.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include "../models/models.h"
 
 
 Node *createNode(char *name, int date, char *month, int year){
   Node *temp = (Node *)malloc(sizeof(Node));
-  strcpy(temp->name, name);
-  temp->date = date;
-  strcpy(temp->month, month);
-  temp->year = year;
+  strcpy(temp->peo.name, name);
+  temp->peo.days = date;
+  strcpy(temp->peo.month, month);
+  temp->peo.year = year;
   return temp;
 }
 
@@ -37,6 +39,7 @@ int convertMonth(char *month){
   }else if(strcmp(month,"december") == 0){
     return 12;
   }
+  return 0;
 }
 
 long long int countUmur(int date, char *month, int year){
@@ -48,23 +51,22 @@ long long int countUmur(int date, char *month, int year){
 }
 
 
-void pushpq(char *name, int date, char *month, int year){
+void pushPQ(char *name, int date, char *month, int year){
   Node *temp = createNode(name, date, month, year);
 
   if(!head){
     head = tail = temp;
-  }else if(countUmur(date, month, year) > countUmur(head->poe.date, head->poe.month, head->poe.year)){
+  }else if(countUmur(date, month, year) > countUmur(head->peo.days, head->peo.month, head->peo.year)){
     temp->next = head;
     head->prev = temp;
     head = temp;
-  }else if(countUmur(date, month, year) < countUmur(tail->poe.date, tail->poe.month, tail->poe.year)){
+  }else if(countUmur(date, month, year) < countUmur(tail->peo.days, tail->peo.month, tail->peo.year)){
     temp->prev = tail;
     tail->next = temp;
     tail = temp;
   }else{
     Node *curr = head;
-
-    while(curr && curr->next->poe.year < year){
+    while(curr && (countUmur(date, month, year) < countUmur(curr->next->peo.days, curr->next->peo.month, curr->next->peo.year))){
       curr = curr->next;
     }
     
@@ -75,7 +77,7 @@ void pushpq(char *name, int date, char *month, int year){
   }
 }
 
-void removepq(){
+void removePQ(){
   if(head && head == tail){
     head = tail = NULL;
     free(head);
@@ -90,14 +92,14 @@ void removepq(){
 void removeAll(){
   Node *curr = head;
   while(head){
-    removepq();
+    removePQ();
   }
 }
 
 void printAll(){
   Node *curr = tail;
   while(curr){
-    printf("%d %s %d - %s\n", curr->peo.days, curr->peo.months, curr->peo.years, curr->peo.name);
+    printf("%d %s %d - %s\n", curr->peo.days, curr->peo.month, curr->peo.year, curr->peo.name);
     curr = curr->prev;
   }
 }
