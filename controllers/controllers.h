@@ -10,6 +10,7 @@ Node *createNode(char *name, int date, char *month, int year){
   temp->peo.days = date;
   strcpy(temp->peo.month, month);
   temp->peo.year = year;
+  temp->next = temp->prev = NULL;
   return temp;
 }
 
