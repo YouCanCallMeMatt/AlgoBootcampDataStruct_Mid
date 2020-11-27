@@ -10,7 +10,11 @@ int main(){
     pushpq();
   }
 
+  if(head){
 
+  }else{
+    puts("")
+  }
 
   removeAll();
   return 0;
